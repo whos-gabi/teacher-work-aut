@@ -104,6 +104,17 @@ app.use((err, req, res, next) => {
     },
   });
 });
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(503).render("index", {
+    title: "503",
+    path: "error/error",
+    data: {
+      error: "503 App Error",
+      message: "Sorry, the server is experiencing some issues.",
+    },
+  });
+});
 //400
 app.use((err, req, res, next) => {
   console.log(err);
