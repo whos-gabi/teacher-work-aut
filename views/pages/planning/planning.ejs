@@ -1,0 +1,45 @@
+<section>
+    <div class="row">
+        <div class="col-12">
+            <h1>Planning</h1>
+            <p>Here you can see the planning of the classes.</p>
+        </div>
+    </div>
+    <div class="row">
+        <% classes.forEach(function(card) { %>
+
+            <div class="col-md-6">
+                <div class="card bg-dark text-white">
+                    <div class="card-header">
+                        <h3>Class: <%= card.name %>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <b>Description:</b>
+                            <%= card.description %>
+                        </p>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                Frequency Type:
+                                <%= card.frequency %>
+                            </div>
+                            <div class="col-md-6">
+                                Nr. of Sutents:
+                                <%= Object.keys(card.students).length %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-12 mt-1">
+                                <a href="/class/planning/<%= card._id%>" class="btn btn-primary w-100">View Planning</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+    </div>
+
+</section>

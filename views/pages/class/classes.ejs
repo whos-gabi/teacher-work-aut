@@ -1,0 +1,141 @@
+<section>
+    <div class="row">
+        <div class="col-12">
+            <h1>Classes</h1>
+            <hr>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Add New Class</button>
+        </div>
+    </div>
+
+    <div class="row my-3 justify-content-left">
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered">
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add New Class</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            style="background-color:#fff;"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="/new/class" name="newclass">
+                            <div class="mb-3">
+                                <label for="inputName" class="form-label">Class Name</label>
+                                <input type="text" class="form-control" id="inputName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="description" name="description">
+                            </div>
+                            <!-- cu frecventa/fara frecventa  fz/fr -->
+                            <div class="mb-3">
+                                <label for="frequency" class="form-label">Choose frequency type</label>
+                                <select class="form-select" id="frequency" name="frequency" required>
+                                    <option value="fz" selected>FZ</option>
+                                    <option value="fr">FR</option>
+                                </select>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary w-100">Submit</button>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <% classes.forEach(function(card) { %>
+            <div class="col-md-6 col-sm-12 col-lg-4">
+
+                <div class="card bg-dark text-white mb-3">
+                    <div class="card-body">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-10">
+                                    <h3>Class: <%= card.name %>
+                                    </h3>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-danger" onclick="deleteClass('<%= card._id %>')"><i
+                                            class="bi bi-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                <b>Description:</b>
+                                <%= card.description %>
+                            </p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    Frequency Type:
+                                    <%= card.frequency %>
+                                </div>
+                                <div class="col-md-6">
+                                    Nr. of Sutents:
+                                    <%= Object.keys(card.students).length %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-md-12 mt-1">
+                                    <a href="/class/<%= card._id %>" class="btn btn-primary w-100">View</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+            <% }); %>
+
+
+                <script>
+                    // const deleteButton = document.getElementById('delete-btn');
+                    function deleteClass(id) {
+                        const confirmed = confirm('Are you sure you want to delete?');
+                        if (confirmed) {
+                            const options = {
+                                method: 'POST',
+                                body: JSON.stringify({}),
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            };
+                            console.log(id + ':::' + confirmed);
+                            fetch('/delete/class/' + id, options)
+                                .then(response => {
+                                    if (response.ok) {
+                                        window.location.href = '/classes?refresh=true';
+                                    } else {
+                                        console.error('Failed to delete');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error deleting:', error);
+                                });
+                        }
+                    }
+
+                </script>
+
+    </div>
+    </div>
+
+</section>

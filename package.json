@@ -1,0 +1,21 @@
+{
+  "name": "teacher-work-aut",
+  "version": "1.0.0",
+  "description": "A web app for teachers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Baghici Gabriel-Cristian",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "sha256": "^0.2.0"
+  }
+}

@@ -1,0 +1,98 @@
+<section>
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-sm-12 col-lg-6">
+            <div class="card text-white bg-dark m-3" id="signup">
+                <div class="card-header">
+                    <h1>Sign Up</h1>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Welcome !</h5>
+
+                    <form method="POST" action="/signup" name="signup">
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" name="firstname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" name="lastname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email"
+                                aria-describedby="emailHelp" name="email" required>
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="repeatPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="repeatPassword" name="confirmPassword">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                        <div class="row mt-3 justify-content-center text-center">
+                            <p class="card-text">Already have an account? </p>
+                            <a class="btn btn-warning w-50" onclick="toggleSignIn()"> Sign In</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="card text-white bg-dark m-3" id="signin">
+                <div class="card-header">
+                    <h1>Sign In</h1>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Happy to see you again</h5>
+
+                    <form method="POST" action="/login" name="signin">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="rememberUser" checked>
+                            <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                        <div class="row mt-3 justify-content-center text-center">
+                            <p class="card-text">Dont have an account?</p>
+                            <a class="btn btn-warning w-50" onclick="toggleSignUp()"> Sign Up</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- import jquery  -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    //get url params
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get('signup');
+    if (myParam == 'true') {
+        $('#signin').hide();
+    }else{
+        $('#signup').hide();
+    }
+
+    function toggleSignIn() {
+
+        $('#signin').show();
+        $('#signup').hide();
+    }
+    function toggleSignUp() {
+        //animate #signin
+        $('#signin').hide();
+        $('#signup').show();
+    }
+</script>

@@ -1,0 +1,28 @@
+<div class="mt-3">
+    <footer>
+        <p class="text-center text-muted">
+            &copy; Copyright <span id="year">2012</span> TeacherEase | All Rights Reserved.
+        </p>
+    </footer>
+</div>
+
+<script>
+    //write a function to get the current year and replce it in coponent with id year
+    function getCurrentYear() {
+        const year = new Date().getFullYear();
+        document.getElementById('year').innerHTML = year;
+    }
+    getCurrentYear();
+    if (window.location.search.includes('refresh=true')) {
+        history.replaceState(null, null, window.location.pathname + window.location.hash);
+        location.reload();
+    }
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
