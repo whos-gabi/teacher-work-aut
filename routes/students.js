@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { addStudent, addGrade } = require("../functions");
+const { addStudent, addGrade, getPlanById } = require("../functions");
 require("dotenv").config();
 const sha256 = require("sha256");
 const DB_NAME = process.env.DB_NAME;
@@ -28,31 +28,63 @@ router.post("/new/student", async (req, res) => {
 });
 
 router.post("/class/:id/student/:email/add/grade", async (req, res) => {
-  // format date to dd.mm.yyyy
-  const date = new Date(req.body.date);
-  const dd = String(date.getDate()).padStart(2, "0");
-  const mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
-  const yyyy = date.getFullYear();
-  req.body.date = dd + "." + mm + "." + yyyy;
+  //TODO: update with planning
+  const classId = req.params.id;
+  const email = req.params.email;
+  const grade = req.body.grade;
+  const planningId = req.body.planning;
 
-  const id = sha256(req.body.date + req.params.email);
+  //get todays date and format as dd.mm.yyyy
+  const date = new Date();
+  const formattedDate = `${date.getDate()}.${
+    date.getMonth() + 1
+  }.${date.getFullYear()}`;
 
-  const newGrade = {
-    grade: req.body.grade,
-    date: req.body.date,
-    _id: id,
-  };
-  await addGrade(
-    DB_NAME,
-    newGrade,
-    req.params.id,
-    req.params.email,
-    req.cookies?.user
-  ).then((result) => {
-    // console.log("result add grade", result);
-    res.status(301).redirect("/class/" + req.params.id);
-  });
+
+  const id = sha256(planningId + email);
+  if (planningId == -1) {
+    const newGrade = {
+      _id: id,
+      grade: grade,
+      planning: {
+        _id: sha256(id + "-1"),
+        contents: "General",
+        date: formattedDate,
+        notes: "",
+      },
+    };
+    await addGrade(
+      DB_NAME,
+      newGrade,
+      classId,
+      email,
+      req.cookies?.user
+    ).then((result) => {
+      // console.log("result add grade", result);
+      res.status(301).redirect("/class/" + req.params.id);
+    });
+  } else {
+    getPlanById(DB_NAME, classId, planningId, req.cookies?.user).then(
+      async (plan) => {
+
+        const newGrade = {
+          _id: id,
+          grade: grade,
+          planning: plan,
+        };
+        await addGrade(
+          DB_NAME,
+          newGrade,
+          classId,
+          email,
+          req.cookies?.user
+        ).then((result) => {
+          // console.log("result add grade", result);
+          res.status(301).redirect("/class/" + req.params.id);
+        });
+      }
+    );
+  }
 });
-
 
 module.exports = router;

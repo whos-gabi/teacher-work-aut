@@ -1,0 +1,63 @@
+<section>
+    <h1>Hi <%= user.firstname %>
+    </h1>
+    <p>Here you can see your profile</p>
+    <div class="row justify-content-center">
+        <div class="col-md-9 ">
+            <div class="card bg-dark text-white ">
+                <div class="card-header">
+                    <h3>Profile</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <h5>
+                                <b>
+                                    First Name
+                                </b>
+
+                                <%= user.firstname %>
+                            </h5>
+                        </div>
+                        <div class="col-6">
+                            <h5>
+                                <b>
+                                    Last Name
+                                </b>
+
+                                <%= user.lastname %>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <h5>
+                                <b>
+                                    Email
+                                </b>
+                                <%= user.email %>
+                            </h5>
+                        </div>
+                        <div class="col-6">
+                            <h5>
+                                <b>
+                                    Classes
+                                </b>
+                                <%= user.classes.length %>
+                            </h5>
+                        </div>
+                    </div>
+                    <!-- <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-warning w-100">Edit</button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-danger w-100">Delete</button>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

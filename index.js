@@ -27,7 +27,8 @@ const app = express();
 app.use(cookieParser());
 require("dotenv").config();
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+// app.use(express.static("public"));
+app.use(express.static(__dirname + '/public'));
 
 const DB_url =
   "mongodb+srv://" +
@@ -48,38 +49,34 @@ app.use(
 
 // Define routes
 app.get("/", function (req, res) {
-  res.render("index", { title: "Home", path: "pages/home" });
+  res.render("index", { title: "Home", path: "pages/home", req: req || "" });
 });
 
 app.get("/auth", authRoutes);
+app.get("/profile", authRoutes);
+app.post("/logout", authRoutes);
 app.post("/signup", authRoutes);
 app.post("/login", authRoutes);
 
 app.get("/classes", classesRoutes);
+app.get("/class/:id", classesRoutes);
 
 app.post("/new/class", classesRoutes);
 app.post("/edit/class/:id", classesRoutes);
 app.post("/delete/class/:id", classesRoutes);
-app.get("/class/:id", classesRoutes);
-
 
 app.get("/planning", planningRoutes);
 app.get("/class/planning/:id", planningRoutes);
 app.post("/new/plan", planningRoutes);
 app.post("/delete/plan", planningRoutes);
 
-
-
-
 app.post("/new/student", studentsRoutes);
 app.post("/class/:id/student/:email/add/grade", studentsRoutes);
 //add grade
 //edit grade
-//remove grade 
-
+//remove grade
 
 //---------------------Routes-------------------
-
 
 // Erorr pages ------------------
 app.use((req, res) => {
@@ -90,6 +87,7 @@ app.use((req, res) => {
       error: "404 Not Found",
       message: "Sorry, the page you are looking for could not be found.",
     },
+    req: req,
   });
 });
 //500
@@ -102,6 +100,7 @@ app.use((err, req, res, next) => {
       error: "500 Internal Server Error",
       message: "Sorry, the server is experiencing some issues.",
     },
+    req: req,
   });
 });
 app.use((err, req, res, next) => {
@@ -113,6 +112,7 @@ app.use((err, req, res, next) => {
       error: "503 App Error",
       message: "Sorry, the server is experiencing some issues.",
     },
+    req: req,
   });
 });
 //400
@@ -126,6 +126,7 @@ app.use((err, req, res, next) => {
       message:
         "Sorry, your browser sent a request that this server could not understand.",
     },
+    req: req,
   });
 });
 

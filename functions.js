@@ -94,7 +94,7 @@ async function findClassById(DB_NAME, id, userEmail) {
     const db = client.db(DB_NAME);
     const user = await db.collection("users").findOne({ email: userEmail });
     if (user) {
-      const classFound = user.classes.find((c) => c._id === id);
+      const classFound = user.classes.find((c) => c._id.toString() === id);
       return classFound;
     }
     return null;
@@ -148,13 +148,19 @@ async function addStudent(DB_NAME, newStudent, classId, userEmail) {
     const classDoc = user.classes.find((c) => c._id.toString() === classId);
 
     // Check if a student with the same email already exists in the class
-    const existingStudent = classDoc.students.find((s) => s.email === newStudent.email);
+    const existingStudent = classDoc.students.find(
+      (s) => s.email === newStudent.email
+    );
     if (existingStudent) {
-      throw new Error("A student with this email already exists in this class.");
+      throw new Error(
+        "A student with this email already exists in this class."
+      );
     }
 
     classDoc.students.push(newStudent);
-    const replaceResult = await db.collection("users").replaceOne({ email: userEmail }, user);
+    const replaceResult = await db
+      .collection("users")
+      .replaceOne({ email: userEmail }, user);
     return replaceResult;
   } catch (e) {
     console.log(e);
@@ -162,7 +168,6 @@ async function addStudent(DB_NAME, newStudent, classId, userEmail) {
     await client.close();
   }
 }
-
 
 async function addGrade(DB_NAME, newGrade, classId, studentEmail, userEmail) {
   const client = new MongoClient(DB_url);
@@ -194,11 +199,8 @@ async function addGrade(DB_NAME, newGrade, classId, studentEmail, userEmail) {
     // Add the new grade to the student's grades array
     student.grades.push(newGrade);
     student.gradeNr++;
-    let gradeSum = 0;
-    for (let i = 0; i < student.grades.length; i++) {
-      gradeSum += student.grades[i];
-    }
-    const generalGrade = parseFloat((gradeSum / student.gradeNr).toFixed(2));
+
+    const generalGrade = calculateGeneralGrade(student.grades);
     student.generalGrade = generalGrade;
 
     // Update the class in the user's classes array
@@ -246,7 +248,6 @@ async function updateClassById(DB_NAME, classId, userEmail, newClassData) {
   }
 }
 
-
 //planning
 async function addPlanning(DB_NAME, planning, userEmail, classId) {
   const client = new MongoClient(DB_url);
@@ -267,13 +268,56 @@ async function addPlanning(DB_NAME, planning, userEmail, classId) {
     const updatedClass = { ...existingClass, planning: newPlannings };
 
     // Update the user's classes array with the updated class
-    const updatedClasses = classes.map((c) => (c._id === classId ? updatedClass : c));
-    await users.updateOne({ email: userEmail }, { $set: { classes: updatedClasses } });
+    const updatedClasses = classes.map((c) =>
+      c._id === classId ? updatedClass : c
+    );
+    await users.updateOne(
+      { email: userEmail },
+      { $set: { classes: updatedClasses } }
+    );
 
     return true;
   } finally {
     await client.close();
   }
+}
+
+async function getPlanById(DB_NAME, classId, planId, userEmail) {
+  const client = new MongoClient(DB_url);
+  try {
+    await client.connect();
+    const database = client.db(DB_NAME);
+    const users = database.collection("users");
+    // Retrieve the user's classes array
+    const user = await users.findOne({ email: userEmail });
+    const classes = user.classes;
+    // Find the class by id in the user's classes array
+    const existingClass = classes.find((c) => c._id === classId);
+    if (!existingClass) {
+      throw new Error("Class not found");
+    }
+    // Find the plan by id in the class's plannings array
+    const plan = existingClass.planning.find((p) => p._id === planId);
+    if (!plan) {
+      throw new Error("Plan not found");
+    }
+    return plan;
+  } catch (e) {
+    console.log(e);
+  } finally {
+    await client.close();
+  }
+}
+
+function calculateGeneralGrade(grades) {
+  let sum = 0;
+  let count = 0;
+  grades.forEach((gradeObj) => {
+    sum += parseInt(gradeObj.grade);
+    count++;
+  });
+  const generalGrade = sum / count;
+  return generalGrade;
 }
 
 async function deletePlanById(DB_NAME, planningId, userEmail, classId) {
@@ -291,7 +335,9 @@ async function deletePlanById(DB_NAME, planningId, userEmail, classId) {
       throw new Error("Class not found");
     }
     // Find the planning by id in the class's plannings array
-    const planningIndex = existingClass.planning.findIndex((p) => p._id === planningId);
+    const planningIndex = existingClass.planning.findIndex(
+      (p) => p._id === planningId
+    );
     if (planningIndex < 0) {
       throw new Error("Planning not found");
     }
@@ -300,15 +346,18 @@ async function deletePlanById(DB_NAME, planningId, userEmail, classId) {
     newPlannings.splice(planningIndex, 1);
     const updatedClass = { ...existingClass, planning: newPlannings };
     // Update the user's classes array with the updated class
-    const updatedClasses = classes.map((c) => (c._id === classId ? updatedClass : c));
-    await users.updateOne({ email: userEmail }, { $set: { classes: updatedClasses } });
+    const updatedClasses = classes.map((c) =>
+      c._id === classId ? updatedClass : c
+    );
+    await users.updateOne(
+      { email: userEmail },
+      { $set: { classes: updatedClasses } }
+    );
     return true;
   } finally {
     await client.close();
   }
 }
-
-
 
 function validateSession(req, res) {
   if (
@@ -336,4 +385,5 @@ module.exports = {
   updateClassById,
   addPlanning,
   deletePlanById,
+  getPlanById,
 };

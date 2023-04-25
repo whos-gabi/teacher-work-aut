@@ -11,20 +11,26 @@
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/classes">Classes</a>
+          <a class="nav-link" href="/classes"><i class="bi bi-people-fill"></i>Classes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/planning">Planning</a>
+          <a class="nav-link" href="/planning"><i class="bi bi-list-task"></i>Planning</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/assignments">Assignments</a>
+          <a class="nav-link" href="/assignments"><i class="bi bi-bookmark-plus-fill"></i>Assignments</a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="/courses">Courses</a>
-        </li> -->
-        <li class="nav-item">
-          <a class="nav-link" href="/auth">Log in</a>
-        </li>
+        <% if(req.cookies?.user){ %>
+          <li class="nav-item">
+            <a class="nav-link" href="/profile"><i class="bi bi-person-fill"></i>Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="delete" href="#"><i class="bi bi-box-arrow-right"></i>Log Out</a>
+          </li>
+          <% }else{ %>
+            <li class="nav-item">
+              <a class="nav-link" href="/auth"><i class="bi bi-box-arrow-in-right"></i>Log In</a>
+            </li>
+            <% } %>
       </ul>
       <span class="navbar-text">
         <i>
@@ -34,3 +40,32 @@
     </div>
   </div>
 </nav>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  //listen to #delete and delete cookie
+  $('#delete').click(function () {
+    deleteCookie();
+  });
+  
+  function deleteCookie() {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify({}),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      fetch('/logout', options)
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/';
+          } else {
+            console.error('Failed to delete');
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting:', error);
+        });
+  }
+</script>

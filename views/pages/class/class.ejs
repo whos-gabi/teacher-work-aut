@@ -5,7 +5,7 @@
         </h1>
     </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 mt-2">
             <div class="card bg-dark text-white">
                 <div class="card-header">
                     <h5>Class name: <%= data.name %>
@@ -34,7 +34,7 @@
             </div>
 
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 mt-2">
             <div class="card bg-dark text-white">
                 <div class="card-header ">
                     <div class="row">
@@ -167,15 +167,24 @@
                                                                 <input type="number" class="form-control" id="grade"
                                                                     name="grade" placeholder="Grade">
                                                             </div>
-                                                            <div class="mb-3">
+                                                            <!-- <div class="mb-3">
                                                                 <label for="date" class="form-label">Date</label>
                                                                 <input type="date" class="form-control" id="date"
                                                                     name="date" placeholder="Date">
-                                                            </div>
+                                                            </div> -->
                                                             <div class="mb-3">
-                                                                <label for="date" class="form-label">Date</label>
-                                                                <input type="date" class="form-control" id="date"
-                                                                    name="date" placeholder="Date">
+                                                                <label for="planning">Select a planning:</label>
+                                                                <select class="form-select" name="planning"
+                                                                    id="planning">
+                                                                    <option value="-1">No Planning</option>
+                                                                    <% for (let j=0; j < planning.length; j++) { %>
+                                                                        <option value="<%= planning[j]._id %>">
+                                                                            <%= planning[j].contents %> (<%=
+                                                                                    planning[j].date %>)
+                                                                        </option>
+                                                                        <% } %>
+                                                                </select>
+                                                            
                                                             </div>
                                                             <button type="submit"
                                                                 class="btn btn-primary w-100">Submit</button>
@@ -195,6 +204,7 @@
                                                 <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Grade</th>
+                                                    <th scope="col">Contents</th>
                                                     <th scope="col">Date</th>
                                                     <th scope="col">Actions</th>
                                                 </tr>
@@ -210,7 +220,10 @@
                                                             <%= data.students[i].grades[j].grade %>
                                                         </td>
                                                         <td>
-                                                            <%= data.students[i].grades[j].date %>
+                                                            <%= data.students[i].grades[j].planning?.contents || ""%>
+                                                        </td>
+                                                        <td>
+                                                            <%= data.students[i].grades[j].planning?.date || "" %>
                                                         </td>
                                                         <td>
                                                             <a href="/class/<%= data._id %>/grade/<%= data.students[i].grades[j]._id %>/edit"

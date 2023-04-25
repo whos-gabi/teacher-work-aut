@@ -18,6 +18,7 @@ router.get("/planning", function (req, res) {
       title: "Planning",
       path: "pages/planning/planning",
       classes: data,
+      req: req,
     });
   });
 });
@@ -33,6 +34,7 @@ router.get("/class/planning/:id", function (req, res) {
       title: "Planning",
       path: "pages/planning/classPlanning",
       data: data,
+      req: req,
     });
   });
 });
@@ -53,7 +55,7 @@ router.post("/new/plan", async function (req, res) {
     _id: sha256(req.body.contents),
     contents: req.body.contents,
     date: formattedDate,
-    notes: req.body.notes,
+    notes: req.body.notes || "",
   };
   try {
     await addPlanning(DB_NAME, planning, userEmail, classId).then((result) => {

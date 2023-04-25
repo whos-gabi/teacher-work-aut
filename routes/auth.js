@@ -1,13 +1,34 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { addUser, findUserByEmail } = require('../functions');
-require('dotenv').config();
-const sha256 = require('sha256');
+const { addUser, findUserByEmail } = require("../functions");
+require("dotenv").config();
+const sha256 = require("sha256");
 const DB_NAME = process.env.DB_NAME;
 
-
 router.get("/auth", function (req, res) {
-  res.render("index", { title: "Auth", path: "pages/auth" });
+  res.render("index", {
+    title: "Auth",
+    path: "pages/auth",
+    req: req,
+  });
+});
+router.get("/profile", function (req, res) {
+  //find user by email in req.cookies.user
+  let email = req.cookies?.user;
+  findUserByEmail(DB_NAME, email).then((data) => {
+    res.render("index", {
+      title: "Auth",
+      path: "pages/profile",
+      user: data,
+      req: req,
+    });
+  });
+});
+
+router.post("/logout", function (req, res) {
+  res.clearCookie("user");
+  res.clearCookie("name");
+  res.redirect("/");
 });
 
 router.post("/signup", async (req, res) => {
@@ -38,6 +59,10 @@ router.post("/signup", async (req, res) => {
 
     // Set a cookie with the user's email
     res.cookie("user", email, { maxAge: 900000, httpOnly: true });
+    res.cookie("name", firstname + " " + lastname, {
+      maxAge: 900000,
+      httpOnly: true,
+    });
     // Redirect to the authentication page with signup=true query parameter
     res.redirect("/auth?signup=false");
   } catch (error) {
@@ -61,6 +86,10 @@ router.post("/login", async (req, res) => {
       if (remember) {
         // Set a cookie with the user's email for 5 hours
         res.cookie("user", user.email, {
+          maxAge: 5 * 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        res.cookie("name", firstname || "" + " " + lastname || "", {
           maxAge: 5 * 60 * 60 * 1000,
           httpOnly: true,
         });
