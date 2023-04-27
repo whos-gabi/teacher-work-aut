@@ -66,7 +66,7 @@ router.post("/new/plan", async function (req, res) {
     console.error(err);
     res.redirect(`/planning?refresh=true`);
   }
-  res.redirect(`/class/planning/${classId}?refresh=true`);
+  // res.redirect(`/class/planning/${classId}?refresh=true`);
 });
 
 router.post("/delete/plan", function (req, res) {

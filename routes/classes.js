@@ -38,8 +38,8 @@ router.post("/new/class", function (req, res) {
   };
   addClass(DB_NAME, newClass, req.cookies?.user).then((result) => {
     console.log(result);
+    res.status(301).redirect("/classes?refresh=true");
   });
-  res.status(301).redirect("/classes?refresh=true");
 });
 
 router.post("/edit/class/:id", function (req, res) {
@@ -102,8 +102,6 @@ router.post("/delete/class/:id", function (req, res) {
       console.log(err);
       res.status(404).send("Class not found: " + err);
     });
-
-  res.status(301).redirect("/classes?refresh=true");
 });
 
 module.exports = router;

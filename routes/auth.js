@@ -89,7 +89,8 @@ router.post("/login", async (req, res) => {
           maxAge: 5 * 60 * 60 * 1000,
           httpOnly: true,
         });
-        res.cookie("name", firstname || "" + " " + lastname || "", {
+        let name = fuser.firstname + " " + fuser.lastname;
+        res.cookie("name", name, {
           maxAge: 5 * 60 * 60 * 1000,
           httpOnly: true,
         });
@@ -97,17 +98,13 @@ router.post("/login", async (req, res) => {
       res.redirect("/");
     } else {
       console.log("User not found");
-      // res.redirect("/auth?signup=true");
-      res.redirect("/");
-
+      res.redirect("/auth?signup=true");
     }
   } catch (e) {
     console.log(e);
     // res.redirect("/auth?signup=true");
-    res.redirect("/");
-
+    res.redirect("/500");
   }
-
 });
 
 module.exports = router;
