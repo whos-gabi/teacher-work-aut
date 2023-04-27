@@ -97,12 +97,17 @@ router.post("/login", async (req, res) => {
       res.redirect("/");
     } else {
       console.log("User not found");
-      res.redirect("/auth?signup=true");
+      // res.redirect("/auth?signup=true");
+      res.redirect("/");
+
     }
   } catch (e) {
     console.log(e);
-    res.redirect("/auth?signup=true");
+    // res.redirect("/auth?signup=true");
+    res.redirect("/");
+
   }
+
 });
 
 module.exports = router;

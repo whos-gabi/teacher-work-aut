@@ -42,7 +42,10 @@
                             <h5>Students</h5>
                         </div>
                         <div class="col-6 d-flex justify-content-end">
-                            <button class="btn btn-primary" id="toggleAddStudent">Add Student</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#addStudentModal">
+                                Add Student
+                            </button>
                         </div>
                     </div>
 
@@ -62,26 +65,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr id="addstudent">
-                                <form action="/new/student" method="POST" name="addStudent">
-
-                                    <th scope="row">0</th>
-                                    <td>
-                                        <input type="text" name="firstname" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="lastname" required>
-                                    </td>
-                                    <td>
-                                        <input type="email" name="email" required>
-                                    </td>
-                                    <td><input type="text" name="classId" value="<%= data._id %>" hidden></td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </td>
-                                </form>
-                            </tr>
-
 
                             <% for (let i=0; i < Object.keys(data.students).length; i++) { %>
                                 <tr>
@@ -184,7 +167,7 @@
                                                                         </option>
                                                                         <% } %>
                                                                 </select>
-                                                            
+
                                                             </div>
                                                             <button type="submit"
                                                                 class="btn btn-primary w-100">Submit</button>
@@ -210,8 +193,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <% for (let j=0; j < Object.keys(data.students[i].grades).length; j++) {
-                                                    %>
+                                                <% for (let j=0; j < Object.keys(data.students[i].grades).length; j++) {%>
                                                     <tr>
                                                         <th scope="row">
                                                             <%= j+1 %>
@@ -220,7 +202,7 @@
                                                             <%= data.students[i].grades[j].grade %>
                                                         </td>
                                                         <td>
-                                                            <%= data.students[i].grades[j].planning?.contents || ""%>
+                                                            <%= data.students[i].grades[j].planning?.contents || "" %>
                                                         </td>
                                                         <td>
                                                             <%= data.students[i].grades[j].planning?.date || "" %>
@@ -252,12 +234,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
-    $(document).ready(function () {
-        $("#addstudent").hide();
-        $("#toggleAddStudent").click(function () {
-            $("#addstudent").toggle();
-        });
-    });
+
     function deleteClass(id) {
         const confirmed = confirm('Are you sure you want to delete?');
         if (confirmed) {
@@ -317,6 +294,43 @@
                         </select>
                     </div>
 
+
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- add student modal  -->
+
+<div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    style="background-color:#fff;"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/new/student" name="newStudent">
+                    <div class="mb-3">
+                        <label for="firstname" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstname" name="firstname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastname" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastname" name="lastname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <input type="text" name="classId" value="<%= data._id %>" hidden>
 
                     <button type="submit" class="btn btn-primary w-100">Submit</button>
 
